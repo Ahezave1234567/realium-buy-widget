@@ -1,12 +1,10 @@
 // ===== Realium Parent Bridge (Framer top-level page) =====
 (() => {
-  // --- CONFIG (Sepolia) ---
-  const CHAIN_ID = 11155111; // Sepolia
-  const SALE_ADDR = "0x3c87689C514EDF1d61d4bCF0EA85fD040507Eef7"; // TokenSale (Sepolia)
-  const USDT_ADDR = "0x87A2eA23BfE0c17086C53C692a00Db81a4C316Df"; // MockUSDT (Sepolia)
-  const PRICE_PER_TOKEN_USD = "1000"; // 1,000 USDT per token
+  const CHAIN_ID = 11155111;
+  const SALE_ADDR = "0x3c8768965C14EDF1d614bCFOEA85fD040507EeF7";
+  const USDT_ADDR = "0x87A2eA23BfE0c17086C53C692a00Db81a4C316Df";
+  const PRICE_PER_TOKEN_USD = "1000";
 
-  // --- Minimal ABIs ---
   const ERC20_ABI = [
     "function decimals() view returns (uint8)",
     "function balanceOf(address) view returns (uint256)",
@@ -23,17 +21,14 @@
   }
 
   async function getProvider() {
-    if (typeof window.ethereum !== "object") {
-      throw new Error("MetaMask not found");
-    }
+    if (typeof window.ethereum !== "object") throw new Error("MetaMask not found");
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     const net = await provider.getNetwork();
     if (Number(net.chainId) !== CHAIN_ID) {
-      // try polite switch
       try {
         await window.ethereum.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0xaa36a7" }] // 11155111 hex
+          params: [{ chainId: "0xaa36a7" }]
         });
       } catch {}
       const net2 = await provider.getNetwork();
@@ -48,9 +43,7 @@
     const provider = await getProvider();
     const signer = await provider.getSigner();
     const usdt = new ethers.Contract(USDT_ADDR, ERC20_ABI, signer);
-
     const dec = await usdt.decimals();
-    // amountUSDT = tokens * 1000 USDT (with USDT decimals)
     const amountUSDT = ethers.utils.parseUnits(
       (BigInt(tokens) * BigInt(PRICE_PER_TOKEN_USD)).toString(),
       dec
@@ -65,7 +58,6 @@
     const signer = await provider.getSigner();
     const usdt = new ethers.Contract(USDT_ADDR, ERC20_ABI, signer);
     const sale = new ethers.Contract(SALE_ADDR, SALE_ABI, signer);
-
     const dec = await usdt.decimals();
     const amountUSDT = ethers.utils.parseUnits(
       (BigInt(tokens) * BigInt(PRICE_PER_TOKEN_USD)).toString(),
@@ -79,7 +71,6 @@
   window.addEventListener("message", async (ev) => {
     const { data, source, origin } = ev;
     if (!data || !data.type || !source) return;
-
     try {
       switch (data.type) {
         case "rlm:connect": {
