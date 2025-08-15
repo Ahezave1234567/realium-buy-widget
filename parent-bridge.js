@@ -2,7 +2,7 @@
 (() => {
   // --- CONFIG (Sepolia) ---
   const CHAIN_ID = 11155111; // Sepolia
-  const SALE_ADDR = "0x3c8768965C14EDF1d614bCFOEA85fD040507EeF7"; // TokenSale (Sepolia)
+  const SALE_ADDR = "0x3c87689C514EDF1d61d4bCF0EA85fD040507Eef7"; // TokenSale (Sepolia)
   const USDT_ADDR = "0x87A2eA23BfE0c17086C53C692a00Db81a4C316Df"; // MockUSDT (Sepolia)
   const PRICE_PER_TOKEN_USD = "1000"; // 1,000 USDT per token
 
